@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import pe.ulima.edu.beans.copy.Alumnos;
+
 public class Gestion {
 
     String url = "jdbc:mysql://localhost:3306/parcial?user=root&password=";
@@ -126,7 +128,72 @@ public class Gestion {
     }
     return rpta;
 } 
+  //Obtener los datos de los alumnos  con lo colegios
+    public List<Alumnos> getAlumno() {
+    	List<Alumnos> rpta = new ArrayList<>();
+        Connection con = null;
+        String sql = "SELECT * FROM alumnos";
+        String sql2 = "SELECT * FROM colegios where id = ?";
+        PreparedStatement stmt = null;
+        PreparedStatement stmt2 = null;
+        ResultSet rs = null;
+        
+        ResultSet rs2 = null;
+        
+        
+        // Obtener la conexion
+        con = getConnection();
+
+        String colegiosfin="";
+        
+    try {
+    	stmt = con.prepareStatement(sql);
+        stmt2 = con.prepareStatement(sql2);
+        
+        rs = stmt.executeQuery(sql);
+       
+        while ( rs.next() ) {
+            
+            
+            String nombre = rs.getString(2);
+            String apellidop = rs.getString(3);
+            String apellidom = rs.getString(4);
+            int dni = rs.getInt(5);
+            String url = rs.getString(6);
+            int codigo = rs.getInt(7);
+            int colegioint = rs.getInt(8);
+            
+            stmt2.setInt(1, colegioint);
+            rs2 = stmt2.executeQuery();
+            
+            while(rs2.next()){
+            	String colegio = rs2.getString(2);
+            	colegiosfin=colegio;
+            }
+            Alumnos alum = new Alumnos (nombre, apellidop, apellidom, dni, url,codigo, colegiosfin);
+            
+            rpta.add(alum);
+        }
+        
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    } finally {
+        // Cerrar todo
+        try {
+        	 stmt.close();
+             
+             stmt2.close();
+            con.close();
+        } catch ( Exception e) {}
+    }
+    return rpta;
+} 
+    //falta eliminar alumnos
     
-    
-    
+    /*
+      UPDATE table_name
+SET column1=value1,column2=value2,...
+WHERE some_column=some_value;
+     */
+     
 }
