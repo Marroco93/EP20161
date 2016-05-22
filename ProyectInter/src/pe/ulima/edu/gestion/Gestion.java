@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import pe.ulima.edu.beans.copy.Alumnos;
+import pe.ulima.edu.beans.Alumnos;
 
 public class Gestion {
 
